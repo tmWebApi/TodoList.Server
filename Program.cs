@@ -16,7 +16,7 @@ builder.Services.AddCors(options =>
 var app = builder.Build();
 
 app.UseCors();
-app.MapGet("/", () => "Hello To My App!");
+app.MapGet("/", () => "TodoList is runing!");
 app.MapGet("/items", ItemService.GetAllItemsAsync);
 app.MapPost("/items", ItemService.AddItemAsync);
 app.MapPut("items/{itemId}/status", ItemService.UpdateItemStatusAsync);
@@ -53,12 +53,14 @@ class ItemService
         return Results.Ok(existingItem);
     }
     public static async Task<IResult> GetAllItemsAsync(ToDoDbContext db)
-    {
+    {        
+        Console.WriteLine("get items", db);
         var itmes = await db.Items.ToListAsync();
         return Results.Ok(itmes);
     }
     public static async Task<IResult> AddItemAsync(ToDoDbContext db, Item newItem)
     {
+
         await db.Items.AddAsync(newItem);
         await db.SaveChangesAsync();
         return Results.Created($"/items/{newItem.Id}", newItem);
